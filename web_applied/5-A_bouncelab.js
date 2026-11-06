@@ -61,7 +61,9 @@ function update(dt) {
 }
 
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgba(17, 26, 51, 0.15)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   ctx.fillStyle = color;
   ctx.beginPath();
   ctx.arc(x, y, r, 0, Math.PI * 2);
