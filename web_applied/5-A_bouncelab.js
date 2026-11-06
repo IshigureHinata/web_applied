@@ -6,8 +6,35 @@ let x = 100;          // 丸の中心の位置
 let y = 80;
 let vx = 180;         // 横の速さ（1秒に180px）
 let vy = 140;         // 縦の速さ（1秒に140px。＋ は下へ）
-const r = 14;         // 半径
+let r = 14;         // 半径
 let last = performance.now();
+let color = "#ffd166";
+
+document.addEventListener("keydown", (e) => {
+  if (e.repeat) return;
+
+  if (e.code === "ArrowUp") {
+    vx = vx * 1.2;
+    vy = vy * 1.2;
+  }
+
+  if (e.code === "ArrowDown") {
+    vx = vx * 0.8;
+    vy = vy * 0.8;
+  }
+
+  if (e.code === "ArrowLeft") {
+    r = r - 2;
+  }
+
+  if (e.code === "ArrowRight") {
+    r = r + 2;
+  }
+
+if (e.code === "KeyC") {
+  color = color === "#ffd166" ? "#ff6b6b" : "#ffd166";
+}
+});
 
 function update(dt) {
   x = x + vx * dt;
@@ -35,7 +62,7 @@ function update(dt) {
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#ffd166";
+  ctx.fillStyle = color;
   ctx.beginPath();
   ctx.arc(x, y, r, 0, Math.PI * 2);
   ctx.fill();
