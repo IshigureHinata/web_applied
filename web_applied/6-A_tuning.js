@@ -8,6 +8,7 @@ const CONFIG = {
   MOVE_SPEED: 300, // 移動を速くする
   MAX_JUMPS: 2.0, // 二段ジャンプ 
   FALL_GRAVITY_RATE: 1.2, // 落下を緩やかにする
+  BOUNCE_RATE: 0.4,       // 【追加】着地時の跳ね返り率（0.2〜0.4くらいが「少し」の目安）
 };
 
 const TARGET_HEIGHT = 64;   // 目印の線の高さ（床から64px＝キャラ2つ分）。ぶつからない
@@ -31,13 +32,15 @@ document.addEventListener("keyup", (e) => {
 function collideWithFloor() {
   if (player.y + player.h > floor.y) {
     player.y = floor.y - player.h;
-    player.vy = 0;
+    const bounceVy = -player.vy * CONFIG.BOUNCE_RATE;
+    player.vy = Math.abs(bounceVy) > 50 ? bounceVy : 0;
     player.isGrounded = true;
     player.jumpsLeft = CONFIG.MAX_JUMPS;   // 着地したら、跳べる回数を元に戻す
   } else {
     player.isGrounded = false;
   }
 }
+
 
 function update(dt) {
   if (keys["ArrowRight"]) {
