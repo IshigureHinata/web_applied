@@ -77,7 +77,13 @@ function updatePlayer(dt) {
   }
   player.x = player.x + player.vx * dt;
 
-     player.facing = player.vx > 0 ? 1 : -1;
+    // 向き：動いているときだけ変える（止まったら、最後の向きのまま）
+  if (player.vx > 0) {
+    player.facing = 1;    // 右
+  }
+  if (player.vx < 0) {
+    player.facing = -1;   // 左
+  }
 
 
   const g = player.vy > 0 ? GRAVITY * FALL_GRAVITY_RATE : GRAVITY;
