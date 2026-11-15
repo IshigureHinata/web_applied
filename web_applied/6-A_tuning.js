@@ -9,6 +9,7 @@ const CONFIG = {
   MAX_JUMPS: 2.0, // 二段ジャンプ 
   FALL_GRAVITY_RATE: 1.2, // 落下を緩やかにする
   BOUNCE_RATE: 0.4,       // 【追加】着地時の跳ね返り率（0.2〜0.4くらいが「少し」の目安）
+  DASH_SPEED: 450, // ダッシュ時の移動速度
 };
 
 const TARGET_HEIGHT = 64;   // 目印の線の高さ（床から64px＝キャラ2つ分）。ぶつからない
@@ -43,12 +44,16 @@ function collideWithFloor() {
 
 
 function update(dt) {
-  if (keys["ArrowRight"]) {
-    player.x = player.x + CONFIG.MOVE_SPEED * dt;
-  }
-  if (keys["ArrowLeft"]) {
-    player.x = player.x - CONFIG.MOVE_SPEED * dt;
-  }
+ const speed = keys["ShiftLeft"] || keys["ShiftRight"]
+  ? CONFIG.DASH_SPEED
+  : CONFIG.MOVE_SPEED;
+
+if (keys["ArrowRight"]) {
+  player.x = player.x + speed * dt;
+}
+if (keys["ArrowLeft"]) {
+  player.x = player.x - speed * dt;
+}
   // 落ちているとき（vy が＋）だけ、重力を強くする
   const g = player.vy > 0 ? CONFIG.GRAVITY * CONFIG.FALL_GRAVITY_RATE : CONFIG.GRAVITY;
   player.vy = player.vy + g * dt;
