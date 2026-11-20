@@ -10,23 +10,41 @@ let enemies = [];
 enemies.push(createEnemy(200, 80));
 enemies.push(createEnemy(380, -120));
 enemies.push(createEnemy(540, 60));
+const guard = createEnemy(500, 80); // 作る（ほかの敵と同じ）
+guard.type = "guard";               // 敵の種類を表す値
+guard.startX = 500;                 // 生まれたときの位置
+enemies.push(guard);                // 入れる
+
 
 // ③ 動かす：配列の敵を1体ずつ取り出して、同じ処理をする
 function updateEnemies(dt) {
   for (const enemy of enemies) {
     enemy.x = enemy.x + enemy.vx * dt;
-    // 端を越えたら、位置を戻して、向きを反対に（５-４の跳ね返り）
-    if (enemy.x < 0) {
-      enemy.x = 0;
-      enemy.vx = -enemy.vx;
-    }
-    if (enemy.x + enemy.w > canvas.width) {
-      enemy.x = canvas.width - enemy.w;
-      enemy.vx = -enemy.vx;
+
+    if (enemy.type === "guard") {
+      if (enemy.x < enemy.startX - 80) {
+        enemy.x = enemy.startX - 80;
+        enemy.vx = -enemy.vx;
+      }
+
+      if (enemy.x + enemy.w > enemy.startX + 80) {
+        enemy.x = enemy.startX + 80 - enemy.w;
+        enemy.vx = -enemy.vx;
+      }
+    } else {
+      // 端を越えたら、位置を戻して、向きを反対に
+      if (enemy.x < 0) {
+        enemy.x = 0;
+        enemy.vx = -enemy.vx;
+      }
+
+      if (enemy.x + enemy.w > canvas.width) {
+        enemy.x = canvas.width - enemy.w;
+        enemy.vx = -enemy.vx;
+      }
     }
   }
 }
-
 // プレイヤーとぶつかったとき：上から落ちてきたときだけ、敵を倒す
 function collideWithEnemies(prevBottom) {
   for (const enemy of enemies) {
@@ -35,17 +53,23 @@ function collideWithEnemies(prevBottom) {
       player.vy = -JUMP_SPEED / 2;    // 踏んだら、少し跳ねる
     }
   }
-   enemies.filter((enemy) => enemy.alive);   // 生きている敵だけを残す
+    enemies = enemies.filter((enemy) => enemy.alive);   // 生きている敵だけを残す
 }
 
 // ④ 描く：配列の敵を1体ずつ取り出して描く
 function drawEnemies() {
   ctx.fillStyle = "#ff6b6b";
   for (const enemy of enemies) {
+
+    if (enemy.type === "guard") {
+      ctx.fillStyle = "#6699ff";
+    } else {
+      ctx.fillStyle = "#ff6b6b";
+    }
+
     ctx.fillRect(enemy.x, enemy.y, enemy.w, enemy.h);
-    
   }
 
-    ctx.fillStyle = "#e8eeff";
+  ctx.fillStyle = "#e8eeff";
   ctx.fillText("敵 = " + enemies.length, 10, 40);
 }

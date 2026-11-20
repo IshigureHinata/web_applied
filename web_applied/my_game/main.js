@@ -5,6 +5,8 @@ function update(dt) {
   const prevBottom = player.y + player.h;   // 動かす前（前の回）の、プレイヤーの下の辺
   updatePlayer(dt);
   updateEnemies(dt);
+ 
+  
   collideWithEnemies(prevBottom);
 }
 
@@ -14,6 +16,9 @@ function draw() {
   drawStage();
   drawPlayer();
     drawEnemies();
+    
+    drawEnemies();
+    
 }
 
 let last = performance.now();
